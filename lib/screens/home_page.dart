@@ -9,11 +9,30 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
   final List<Map<String, dynamic>> menuItems = [
     {'title': 'Home', 'icon': Icons.home},
     {'title': 'Profile', 'icon': Icons.person},
     {'title': 'Settings', 'icon': Icons.settings},
     {'title': 'Logout', 'icon': Icons.logout},
+  ];
+  final List<Map<String, String>> items = [
+    {
+      "title": "Saarthi GPS",
+      "desc":
+          "Saarthi GPS is a real-time CNG Locator App offering live location monitoring, route playback and centralized fleet management through a modern dashboard.",
+    },
+    {
+      "title": "Fleet Tracker",
+      "desc":
+          "Track and manage your vehicles with advanced tracking features and analytics.",
+    },
+    {
+      "title": "Route Monitor",
+      "desc":
+          "Monitor route history and optimize your fleet performance easily.",
+    },
   ];
   @override
   Widget build(BuildContext context) {
@@ -199,86 +218,150 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
 
-                  Stack(
-                    alignment: Alignment.bottomCenter,
-                    children: [
-                      // Base Container
-                      Container(
-                        height: 300,
-                        width: 300,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(34),
-                        ),
-                      ),
-
-                      // Overlay Container
-                      Container(
-                        padding: EdgeInsets.all(10),
-                        height: 200,
-                        width: 300,
-                        decoration: BoxDecoration(
-                          color: Colors.black.withValues(alpha: 0.3),
-                        ),
-                        alignment: Alignment.topCenter,
-                        child: Column(
+                  SizedBox(
+                    height: 320,
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: items.length,
+                      onPageChanged: (index) {
+                        setState(() {
+                          _currentPage = index;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          alignment: Alignment.bottomCenter,
                           children: [
-                            Text(
-                              "Saarthi GPS",
-                              style: TextStyle(
+                            // Base Container
+                            Container(
+                              height: 300,
+                              width: 300,
+                              decoration: BoxDecoration(
                                 color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FontStyle.italic,
+                                borderRadius: BorderRadius.circular(34),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
+
+                            // Overlay Container
+                            Container(
+                              padding: EdgeInsets.all(10),
+                              height: 200,
+                              width: 300,
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.3),
                               ),
-                              child: Text(
-                                "Saarthi GPS is a real-time CNG Locator App offering live location monitoring, route playback and centralized fleet management through a modern dashboard.",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                            ),
-                            Row(
-                              spacing: 16,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    maximumSize: Size(150, 40),
-                                    minimumSize: Size(60, 30),
-                                  ),
-                                  child: Text(
-                                    'Read More',
+                              alignment: Alignment.topCenter,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    items[index]["title"]!,
                                     style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600,
                                       fontStyle: FontStyle.italic,
                                     ),
                                   ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    maximumSize: Size(60, 40),
-                                    minimumSize: Size(40, 30),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                    ),
+                                    child: Text(
+                                      items[index]["desc"]!,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontStyle: FontStyle.italic,
+                                      ),
+                                    ),
                                   ),
-                                  child: Icon(
-                                    Icons.arrow_forward,
-                                    color: Colors.black,
+                                  Row(
+                                    spacing: 16,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          maximumSize: Size(150, 40),
+                                          minimumSize: Size(60, 30),
+                                        ),
+                                        child: Text(
+                                          'Read More',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400,
+                                            fontSize: 16,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          maximumSize: Size(60, 40),
+                                          minimumSize: Size(40, 30),
+                                        ),
+                                        child: Icon(
+                                          Icons.arrow_forward,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
+                        );
+                      },
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // LEFT BUTTON
+                      OutlinedButton(
+                        onPressed: () {
+                          int newIndex =
+                              (_currentPage - 1 + items.length) % items.length;
+                          _pageController.animateToPage(
+                            newIndex,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        child: Icon(Icons.arrow_back, color: Colors.white),
+                      ),
+
+                      // INDICATOR
+                      Row(
+                        children: List.generate(
+                          items.length,
+                          (index) => Container(
+                            margin: EdgeInsets.symmetric(horizontal: 4),
+                            width: _currentPage == index ? 12 : 8,
+                            height: _currentPage == index ? 12 : 8,
+                            decoration: BoxDecoration(
+                              color:
+                                  _currentPage == index
+                                      ? Colors.white
+                                      : Colors.grey,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
                         ),
+                      ),
+
+                      // RIGHT BUTTON
+                      OutlinedButton(
+                        onPressed: () {
+                          int newIndex = (_currentPage + 1) % items.length;
+                          _pageController.animateToPage(
+                            newIndex,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        child: Icon(Icons.arrow_forward, color: Colors.white),
                       ),
                     ],
                   ),
