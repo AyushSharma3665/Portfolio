@@ -11,6 +11,7 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  bool startAnimation = false;
   final List<Map<String, dynamic>> menuItems = [
     {'title': 'Home', 'icon': Icons.home},
     {'title': 'Profile', 'icon': Icons.person},
@@ -34,6 +35,17 @@ class _HomePageState extends State<HomePage> {
           "Monitor route history and optimize your fleet performance easily.",
     },
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(milliseconds: 200), () {
+      setState(() {
+        startAnimation = true;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,27 +125,67 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text(
-                        'Ayush',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 34,
-                          fontStyle: FontStyle.italic,
+                      TweenAnimationBuilder(
+                        tween: Tween<double>(
+                          begin: startAnimation ? -200 : -200,
+                          end: startAnimation ? 0 : -200,
+                        ),
+                        duration: Duration(milliseconds: 800),
+                        curve: Curves.easeOut,
+                        builder: (context, value, child) {
+                          return Transform.translate(
+                            offset: Offset(value, 0),
+                            child: child,
+                          );
+                        },
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Ayush',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 34,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 60.0),
+                              child: Text(
+                                'Sharma',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 34,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 60.0),
-                        child: Text(
-                          'Sharma',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 34,
-                            fontStyle: FontStyle.italic,
+                      TweenAnimationBuilder(
+                        tween: Tween<double>(
+                          begin: startAnimation ? 200 : 200,
+                          end: startAnimation ? 0 : 200,
+                        ),
+                        duration: Duration(milliseconds: 800),
+                        curve: Curves.easeOut,
+                        builder: (context, value, child) {
+                          return Transform.translate(
+                            offset: Offset(value, 0),
+                            child: child,
+                          );
+                        },
+                        child: CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.white,
+                          backgroundImage: AssetImage(
+                            'assets/images/profile_photo.jpg',
                           ),
                         ),
                       ),
